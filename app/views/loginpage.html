@@ -1,0 +1,324 @@
+﻿﻿#{extends 'main.html' /}
+#{set title:'會員登入頁面' /}
+
+#{set 'moreStyles' }
+    <script src="@{'/public/javascripts/kendo.all.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/kendo.common.min.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/kendo.default.min.css'}">
+    <script src="@{'/public/javascripts/swfobject.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    <script type='text/javascript'>
+        function OnLoadCallback() {
+          gapi.client.setApiKey('AIzaSyBPOgtmO1rYYm9ieSQ-BD5PiAiHNgkwI5k');
+          gapi.client.load('youtube', 'v3', function () {console.log("youtube api loaded and ready");});
+        }
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
+#{/set}
+
+#{set 'moreScripts'}
+<style type='text/css'>
+#wrapper{
+    width:600px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:;
+}
+#bar{
+    padding-bottom:50px;
+}
+.inputgroup{
+    float:left;
+    margin-left:2px;
+    margin-right:2px;
+}
+.inputgroup ul{
+    border: 1px solid #999966;
+    list-style:none;
+    
+}
+.inputgroup ul li{
+    padding-left:10px;
+    cursor:pointer;
+}
+.over{
+    background-color:#6699FF;
+}
+#content{
+    width:300px;
+    float:left;
+}
+#content ul{
+    list-style:none;
+}
+
+#comment{
+    margin-top:35px;
+    margin-left:20px;
+    width:280px;
+    float:right;
+}
+#comment p{
+    word-wrap:break-word;
+    height:150px;
+    padding:10px;
+    margin-bottom:112px;
+    border: 1px solid #CC3300;
+    cursor:pointer;
+}
+#commentWindow ul{
+    list-style:none;
+    padding:5px;
+}
+#commentWindow ul li{
+    margin-top:3px;
+    margin-bottom:3px;
+    padding:3px;
+    border: 1px solid #CC6600;
+}
+</style>
+<script type='text/javascript'>
+    var searchVideoNum="", year="", where="", searchVideoResult="", userLoginAccount="";
+    var currentVideoAmount=0, getVideoNum=3, isRemoveli=true;
+    $(document).ready(function(){
+        userLoginAccount = $("#wrapper input[name|='userLoginAccount']").val();  //先將隱藏在input的登入著帳號存起來, 顯示影片用
+        $.post( "getlist", {userAccount:userLoginAccount, 
+        	                strNum:currentVideoAmount, 
+        	                endNum:(currentVideoAmount+getVideoNum)}, getlistResponseFn ); //畫面載入影片顯示
+        $(".inputgroup ul").hide();
+        $(".inputgroup input[title|='year']").bind("focus", focusFn);
+        $(".inputgroup input").bind("blur", blurFn);
+        var inputListLeng = $(".inputgroup ul li").length;
+        //console.log(inputListLeng);
+        for(var i=0; i<inputListLeng; i++){
+            $(".inputgroup ul li:eq("+i+")").bind("mouseover", listMouseoverFn)
+            $(".inputgroup ul li:eq("+i+")").bind("mouseout", listMouseoutFn)
+            $(".inputgroup ul li:eq("+i+")").bind("click", listClickFn)
+        }
+        $(window).keypress(keypressFn); //windwo加入keybored事件 //按下enter尋找
+        $("#comment ul input").bind("click", function(){ $("#comment ul").hide(); });
+        
+        $(window).scroll(function (){
+        	//console.log($(window).scrollTop())
+        	if($(window).scrollTop()==$(document).height()-$(window).height()){  console.log("down");
+        	   isRemoveli = false;
+        	   $.post( "getlist", {userAccount:userLoginAccount, 
+        		                   strNum:currentVideoAmount, 
+        		                   endNum:(currentVideoAmount+getVideoNum-1)}, getlistResponseFn ); //畫面載入影片顯示
+        	}
+        })
+        
+    });//==read end==
+    function focusFn(e){
+        $(e.currentTarget).next("ul").slideDown(500);
+    }
+    function blurFn(e){
+       $(".inputgroup ul").slideUp(1000);
+       var parSwitch = $(e.currentTarget).attr("title");
+       //console.log(parSwitch);
+       switch(parSwitch){
+        case "year": year = $(e.currentTarget).val();
+        break;
+        case "where": where = $(e.currentTarget).val();
+        break;
+       }
+    }
+    function listMouseoverFn(e){
+        $(e.currentTarget).addClass("over");
+    }
+    function listMouseoutFn(e){
+        $(e.currentTarget).removeClass("over")
+    }
+    function listClickFn(e){                                                            //每個dropdown的清單按下所執行的方法
+       //console.log("我在li按下後得到li的內容 : " + $(e.currentTarget).html());          //顯示按下的那個li名稱
+       $(e.currentTarget).parent().prev("input").val($(e.currentTarget).html());
+       var parSwitch = $(e.currentTarget).parent().prev("input").attr("title");         //按下後離開, 為先執行blurFn在執行listclickFn
+       switch(parSwitch){
+        case "soundName": searchVideoNum = $(e.currentTarget).attr("title");            //儲存找尋的5個影片的編號
+        break;
+        case "year": year = $(e.currentTarget).html();
+        break;
+       }
+    }
+    function keypressFn(e){
+        //console.log( "which : " + $(e.which) + "/ keycode : " + $(e.keyCode) );      //官網找不到:每個按鈕的編號 
+        if( e.which!=13 || $(".inputgroup input[title|='soundName']").val()=="" ){     //要按下Enter和input裡要有字
+            return;
+        }
+        search( $(".inputgroup input[title|='soundName']").val() ); //這個是為了去收尋影片
+    }
+    function goclickFn(){
+        //alert("影片編號"+searchVideoNum+"/年"+year+"/地"+where+"/找尋的影片json"+(searchVideoResult!="")+"登入的使用著帳號"+userLoginAccount);  //測試
+        if( searchVideoNum=="" || year=="" || where=="" || searchVideoResult==""){
+            alert("please check all the input button have word or must be log in!!");
+            return;
+        }
+        $.post( "parseJsonSav", { json:searchVideoResult, Num:searchVideoNum, year:year,  place:where, act:userLoginAccount} , saveResponseFn );
+    }
+    function saveResponseFn(data){
+        if(data=="ok"){
+        	currentVideoAmount=0;
+        	isRemoveli = true;
+        	$.post( "getlist", {userAccount:userLoginAccount, 
+        		                strNum:currentVideoAmount, 
+        		                endNum:(currentVideoAmount+getVideoNum)}, getlistResponseFn ); //畫面載入影片顯示
+        }else{
+            alert(data);
+        }
+    }
+    var title;
+    function getlistResponseFn(data){   //ajax丟參數userAccount, callback方法得到影片********
+    	if(data==false){
+    		return;
+    	}
+    	if(isRemoveli){
+    		console.log("remove li, currentVideoAmount : " + currentVideoAmount + ", save Call back Fn : " + data)
+    		$("#content ul").children().remove();
+    		$("#comment").children().remove();
+    	}
+        for(var i = 0; i<data.length; i++){ //傳過來的是影片
+            //console.log("video Title: " + data[i].title + "/ video ID: " + data[i].v_id + "/video message : " + data[i].message);
+            /*comment*/ 
+            if(data[i].message == undefined){
+            	$("#comment").append("<p title='"+data[i].v_id+"' onclick='commentClick(event)'>To click this can comment !!</p>")
+            }else{
+            	var messageLength = data[i].message.length-1;    //第二次傳來就是從0開始
+                $("#comment").append("<p title='"+data[i].v_id+"' onclick='commentClick(event)'>"+data[i].message[messageLength].senderName+" say:<br>"+data[i].message[messageLength].senderContent+"</p>")	
+            }
+            /*space*/
+            if(title!=data[i].year.substring(7, 11)+", "+data[i].place){
+            	title = data[i].year.substring(7, 11)+", "+data[i].place;
+                $("#content ul").append("<h4 style='height:16px;'>"+title+"</h4>");
+            }else{
+            	$("#content ul").append("<h4 style='height:16px;'></h4>");
+            }
+            /*video*/
+            $("#content ul").append("<li id='li"+(currentVideoAmount + i)+"'></li>"); //第二次傳來li必須要接著號碼下去
+            swfobject.embedSWF("http://www.youtube.com/v/"+data[i].v_id+"?enablejsapi=1&playerapiid=ytplayer&version=3", "li"+(currentVideoAmount + i)+"", "300", "200", "8"); 
+            $("#content ul").append("<a style='cursor:pointer;' onclick='videoTagFri(event)' title='"+data[i].v_id+"'>tag friends</a>")  //加入按鈕, 給予影片id, 把id變數寫上面
+            
+        }
+    	currentVideoAmount = $("#content ul object").length;
+    }
+    function displayJsonInList(javascriptJson){
+        $(".inputgroup:eq(0) ul li").remove();
+        for(var i=0; i<javascriptJson.items.length; i++){
+            $(".inputgroup:eq(0) ul").append("<li title='"+i+"'>"+javascriptJson.items[i].snippet.title+"</li>");
+            $(".inputgroup:eq(0) ul li").bind("mouseover", listMouseoverFn)
+            $(".inputgroup:eq(0) ul li").bind("mouseout", listMouseoutFn)
+            $(".inputgroup:eq(0) ul li").bind("click", listClickFn)
+        }
+        $(".inputgroup:eq(0) ul").slideDown(500);
+        $(".inputgroup:eq(0) input").bind("focus", focusFn);
+    }
+      
+//===============youtube api search in keywork====================================
+    function search(par) {
+      //console.log(par)
+      var request = gapi.client.youtube.search.list({
+        q: par,                                          //q為利用字串做搜尋
+        part: 'snippet',
+        type: 'video'
+      });
+    
+      request.execute(function(response) {
+	      //console.log(response);                            //測試String
+	      var result = response.result;
+	      if (result) {
+	         searchVideoResult = JSON.stringify(result);          //得到json的純文字格式
+	         //console.log(searchVideoResult);                            //測試String
+	         //$("#info").html(searchVideoResult);                         //測試
+	         displayJsonInList( JSON.parse(searchVideoResult) )             
+	      }else {
+	      	 alert("Error, try again later");
+	      }
+      });
+    }
+//============  comment  ==========================================
+    var commentVideoId, kendoWindowComment;
+    function commentClick(e){
+    	commentVideoId = $(e.currentTarget).attr("title");
+    	kendoWindowComment = $("#commentWindow").kendoWindow({
+             actions:["Close"], draggable:true, height:"400px", width:"300px", resizable:false, title:"comment",
+             content:"commentPage?videoId="+commentVideoId+""}).data("kendoWindow");
+    	kendoWindowComment.center().toFront().open();
+    }
+    function commentSumbit(){
+    	var content = $("#commentWindow textArea[name|='commentContent']").val()
+    	$.post("commentSave", {id:commentVideoId, name:userLoginAccount, content:content}, commentSaveRes);
+    }
+    function commentSaveRes(data){
+    	kendoWindowComment.refresh();
+    	$("#comment p[title|='"+commentVideoId+"']").html(data);
+    }
+//=============tag friend=================  
+    var videoId;
+    function videoTagFri(e){
+        videoId = $(e.target).attr("title")
+        var wind = $("#tagFriWindow").kendoWindow({
+                actions:["Close"], draggable:true, height:"150px", width:"400px", resizable:false, title:"Tag Friends",
+                content:"showTagFriends?videoId="+videoId+""}).data("kendoWindow");
+        wind.center().open();
+    }
+    function selectFriendChange(e){
+        var videoId = $("#tagFriWindow p").text()
+        var nameId = $(e.currentTarget).val()
+        //console.log("tag save must  have :videoId : "+videoId+"/ nameId : "+nameId) //做tag存取要有tag的人id, 影片id
+        $.post("tagFriend", {videoId:videoId, nameId:nameId}, tagSaveRes)
+    }
+    function tagSaveRes(data){
+        var wind = $("#tagFriWindow").kendoWindow({
+                actions:["Close"], draggable:true, height:"150px", width:"400px", resizable:false, title:"Tag Friends",
+                content:"showTagFriends?videoId="+videoId+""}).data("kendoWindow");
+        wind.center().open();
+    }
+    function cancelTagFn(e){
+        var tagFriId = $(e.currentTarget).attr("title");
+        $.post("cancelTagFriend", {videoId:videoId, tagFriId:tagFriId}, cancelTagRes)
+    }
+    function cancelTagRes(data){
+        var wind = $("#tagFriWindow").kendoWindow({
+                actions:["Close"], draggable:true, height:"150px", width:"400px", resizable:false, title:"Tag Friends",
+                content:"showTagFriends?videoId="+videoId+""}).data("kendoWindow");
+        wind.center().open();
+    }
+    
+</script>
+#{/set}
+<div id="wrapper">
+<h3>${userName} welcome
+    <a href='/logout' style='float:right;font-size:12px;'>Log out</a>
+</h3>
+
+<input type='hidden' name='userLoginAccount' value='${userSession}'>
+    <div id="bar">
+        <div class="inputgroup" style="width:180px">
+          <input type="text" class="form-control" placeholder="input the sound name" title="soundName">
+          <ul>   
+          </ul>
+          press enter can search list 
+        </div>
+        <h3 class="inputgroup">reminds me of</h3>
+        <div class="inputgroup" style="width:70px">
+         <input type="text" class="form-control" placeholder="year" title="year">
+          <ul>  
+            <li>2007</li>  
+            <li>2008</li>  
+            <li>2009</li>
+            <li>2010</li>   
+          </ul>
+        </div>
+        <h3 class="inputgroup">at</h3>
+        <div class="inputgroup" style="width:100px">
+            <input type="text" class="form-control" placeholder="place" title="where">
+        </div>
+        <button class="btn btn-default" type="button" onclick="goclickFn()">Go!</button>
+    </div>
+    <div id="content">
+        <ul></ul>
+    </div>
+    <div id="comment"></div>
+</div>
+<div id='info'></div>
+<div id='tagFriWindow'></div>
+<div id='commentWindow'></div>

@@ -1,0 +1,7 @@
+﻿<ul style='word-wrap:break-word;height:300px;overflow-x:hidden;overflow-y:auto;'>
+#{list items:commentList, as:'e'}
+    <li>${e.senderName} say：<br>${e.senderContent}</li>
+#{/list}
+</ul>
+<textarea rows="3" cols="30" name='commentContent'></textarea><br>
+<input type='button' value='submit' onclick='commentSumbit()'>

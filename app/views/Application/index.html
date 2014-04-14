@@ -1,0 +1,51 @@
+﻿﻿﻿#{extends 'main.html' /}
+#{set title:'首頁' /}
+
+#{set 'moreScripts'}
+<style>
+#wrapper{
+    width:250px;
+    margin-left:auto;
+    margin-right:auto;
+    padding-top:100px;
+}
+</style>
+<script type='text/javascript'>
+    $(document).ready(function (){
+        $("#loginForm").submit(function(event){
+            event.preventDefault(); //不要讓他連接過去, Stop form from submitting normally
+            var act="", pw="";
+            act = $("#loginForm input[name|='account']").val();
+            pw = $("#loginForm input[name|='password']").val();
+            if(act!="", pw!=""){
+            	$.post("/login", {account:act, password:pw}, loginResult);
+            }else{
+            	$("#content h4").html("your account and password incorrect");
+            }
+            
+        })
+    })
+    
+    function loginResult(data){
+        if(data == true) {
+            window.location = "/loginpage";
+        } else {
+            $("#content h4").html(data);
+        }
+    }
+
+</script>
+#{/set}
+
+
+<div id='wrapper'>
+    <div id='content'>
+    <h3>member login in</h3>
+        <form id='loginForm'>
+                帳號:<input type='text' name='account' placeholder="account"><br>
+                密碼:<input type='password' name='password' placeholder="password"><br>
+        <input type='submit' value='submit' > <a href='/signup'>sing up</a>       
+        </form>  
+        <h4 style='color:#FF0000'></h4>   
+    </div>
+</div>

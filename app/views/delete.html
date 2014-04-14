@@ -1,0 +1,44 @@
+﻿#{extends 'main.html' /}
+#{set title:'刪除' /}
+#{set 'moreScripts'}
+<style type='text/css'>
+#wrapper{
+    width:400px;
+    margin-right:auto;
+    margin-left:auto;
+    margin-top:200px;
+    text-align:center;
+}
+</style>
+<script type='text/javascript'>
+    var userSelectVal;
+    $(document).ready(function (){
+        $("#wrapper select").bind("change", changeFn)
+    })
+    function changeFn(e){
+        userSelectVal = $(e.currentTarget).val();  //select執行change得到option的val值(value)
+        //console.log(userSelectVal);
+        if(userSelectVal!="please select.."){
+            $.post( "delete", {id:userSelectVal}, resultFn)
+        }
+    }
+    function resultFn(data){
+        //console.log("data : " + data)  //ok 或 error
+        if(data=="ok"){
+            $("#wrapper select option[value|='"+userSelectVal+"']").remove();
+        }
+        $("#wrapper h4").html("delete result is : " + data)
+    }
+    
+</script>
+#{/set}
+<div id='wrapper'>
+    select delete id : 
+    <select>
+        <option>please select..</option>  <!--沒寫value預設就為顯示的內容值(please select..)-->
+        #{list items:userList, as:'e'}
+            <option value='${e.id}'>${e.id}：${e.name}</option>
+        #{/list}
+    </select>
+    <h4 style='color:#FF0000'></h4>
+</div>

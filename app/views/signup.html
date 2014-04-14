@@ -1,0 +1,49 @@
+﻿#{extends 'main.html' /}
+#{set title:'註冊會員'/}
+#{set 'moreScripts'}
+<style>
+#wrapper{
+    width:250px;
+    margin-left:auto;
+    margin-right:auto;
+    padding-top:100px;
+}
+</style>
+<script>
+    function clickFn(){
+        event.preventDefault();
+        var name="", age="", mail="", account="", password="";
+        name = $("#f1 input[name|='name']").val();
+        age = $("#f1 input[name|='age']").val();
+        mail = $("#f1 input[name|='mail']").val();
+        account = $("#f1 input[name|='account']").val();
+        password = $("#f1 input[name|='password']").val();
+        if(name==""||age==""||mail==""||account==""||password==""){
+            $("#wrapper h4").html("input is not empty!!");
+        }else{
+            $.post('signup', {name:name, age:age, mail:mail, account:account, password:password}, callback)
+        }
+    }
+    function callback(data){
+        if(data=="ok"){
+            location.href='/'
+        }else{
+            $("#wrapper h4").html(data);
+        }
+    }
+</script>
+#{/set}
+
+
+<div id='wrapper'>
+<h3>create new account</h3>
+<form id='f1'>
+名子：<input type='text' name='name' placeholder="name"><br>
+年齡：<input type='text' name='age' placeholder='age'><br>
+郵件：<input type='text' name='mail' placeholder='mail'><br>
+帳號：<input type='text' name='account' placeholder='account'><br>
+密碼：<input type='text' name='password' placeholder='password'><br>
+<input type='button' value='Enter' onclick='clickFn()'>
+</form>
+<h4 style='color:#FF0000'></h4>   
+</div>

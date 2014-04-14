@@ -1,0 +1,70 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+*     /                                        Application.index
+
+#create member info
+*     /signup                                  Application.signup
+
+#login page
+*     /login                                   Application.login
+
+#login page
+*     /loginpage                               Application.loginpage
+
+#log out page
+*     /logout                                  Application.logout 
+
+#parSav page
+*     /parseJsonSav                            Application.parseJsonSav
+
+#get all data from database
+*     /getlist                                 Application.getlist
+
+#show friend be selected 
+*     /showTagFriends                          Application.showTagFriends
+
+#tag friend save in music field taggedFriends
+*     /tagFriend                               Application.tagFriend
+
+#cancel tag friend
+*     /cancelTagFriend                         Application.cancelTagFriend
+
+#i am try to add comment
+*     /commentPage                             Application.commentPage
+
+#save comment data
+*     /commentSave                             Application.commentSave
+
+#### localhost:9000/user/create ####
+*     /user                                    MyUser.user
+
+#user create
+*     /user/create                             MyUser.create
+
+#user update
+*     /user/update                             MyUser.update
+
+#post update form data to update
+*     /user/upForm                             MyUser.upForm
+  
+#user delete
+*     /user/delete                             MyUser.delete
+ 
+#user list
+*     /user/list                               MyUser.list  
+
+#get user data list
+*     /user/getList                            MyUser.getList   
+###################################                  
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
