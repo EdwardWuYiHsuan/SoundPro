@@ -9,18 +9,18 @@ import play.mvc.Controller;
 
 public class Comments extends Controller {
 
-	public static void commentPage(String videoId){
-    	Music music = Music.find("v_id", videoId).first();
-    	List<Comment> commentList = music.message;
+	public static void showPage(String videoId){
+    	Music music = Music.find("videoId", videoId).first();
+    	List<Comment> commentList = music.comments;
     	renderTemplate("fragments/comments.html", commentList); //只有屬性message這筆陣列為一筆資料
     }
-    public static void commentSave(String id, String name, String content){
-    	Music music = Music.find("v_id", id).first();
+    public static void add(String videoId, String name, String content){
+    	Music music = Music.find("videoId", videoId).first();
     	Comment com = new Comment(name, content);
-    	if(music.message == null) {
-    		music.message = new ArrayList<Comment>();
+    	if(music.comments == null) {
+    		music.comments = new ArrayList<Comment>();
     	}
-    	music.message.add(com);
+    	music.comments.add(com);
     	music.save();
     	renderText(name+" say:<br>"+content);
 	}

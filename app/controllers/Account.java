@@ -5,8 +5,11 @@ import play.mvc.Controller;
 
 public class Account extends Controller {
 	
+	public static void showPage() {
+        renderTemplate("login.html");
+    }	
 	public static void signup(String name, String age, String mail, String account, String password){
-    	System.out.println("name : " + name + "age : " + age +mail + account + password);
+//    	System.out.println("name : " + name + "/age : " + age + "/mail : " + mail + "/account : " + account + "/password : " + password);
     	if(name==null||age==null||account==null||password==null){
     		render("signup.html");  //這邊可以連結到loginpage
     	}else{
@@ -38,23 +41,23 @@ public class Account extends Controller {
 				renderText("your account and password incorrect");
 			}
     	}else{
-    		Application.index();
+    		showPage();
     	}
     }
-    public static void loginpage(){
+    public static void loginSuccessful(){
     	String userSession = session.get("account");
     	if(userSession!=null){
     		User user = User.find("account", userSession).first();
         	String userName = user.getName();
-    		renderTemplate("login.html", userSession, userName);
+    		renderTemplate("timeline.html", userSession, userName);
     	}else{
-    		Application.index();
+    		showPage();
     	}
     }
     public static void logout(){
     	session.remove("account");
 //    	System.out.println("##logout remove session : " + session.get("account"));
-    	Application.index();
+    	showPage();
     }
 
 }

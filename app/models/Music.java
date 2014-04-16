@@ -9,6 +9,7 @@ import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexed;
@@ -17,7 +18,8 @@ import com.google.code.morphia.utils.IndexDirection;
 @Entity
 //@Indexes({@Index("-year")})
 public class Music extends Model {
-	public String v_id;
+	@Id
+	public String videoId;
 	public String title;
 	public String description;
 	//@Indexed(value=IndexDirection.ASC, name="year") 
@@ -29,23 +31,23 @@ public class Music extends Model {
 	public List<User> taggedFriends; 
 	
 	@Embedded
-	public List<Comment> message;
+	public List<Comment> comments;
 	
-	public Music(String v_id, String title, String description, Date year, String place, String userId){
-		this.v_id = v_id;
+	public Music(String videoId, String title, String description, Date year, String place, String userId){
+		this.videoId = videoId;
 		this.title = title;
 		this.description = description;
 		this.year = year;
 		this.place = place;
 		this.userId = userId;
 		this.taggedFriends = new ArrayList<User>();
-		this.message = new ArrayList<Comment>();
+		this.comments = new ArrayList<Comment>();
 	} 
-	public void setv_id(String v_id){
-		this.v_id = v_id;
+	public void setv_id(String videoId){
+		this.videoId = videoId;
 	}
 	public String getv_id(){
-		return v_id;
+		return videoId;
 	}
 	public void setTitle(String title){
 		this.title = title;

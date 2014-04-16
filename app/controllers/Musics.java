@@ -17,23 +17,7 @@ import play.mvc.Controller;
 
 public class Musics extends Controller {
 	
-	public static void parse(String json, int num, String year, String place){
-    	// obect.items[0].snippet.title
-    	JsonElement jelement = new JsonParser().parse(json);
-        JsonObject  jobject = jelement.getAsJsonObject();        //找到最上層的object
-        JsonArray jarray = jobject.getAsJsonArray("items");     //因為items是一個陣列,需要JosnArray
-    	jobject = jarray.get(num).getAsJsonObject();            //找到items這個物件, 編號為num的元素
-        //============找id==================
-        JsonObject idobject = jobject.getAsJsonObject("id");
-        String v_id = idobject.get("videoId").toString().replaceAll("\"", "");
-        System.out.println("tarce v_id parse json have : " + v_id); //測試是否有雙引號(是的), 因為parse json會有雙引號, 所以連同雙引號也存入mongodb
-    	//============找title, description================
-    	JsonObject snippet = jobject.getAsJsonObject("snippet");
-        String title = snippet.get("title").toString();
-        String description = snippet.get("description").toString();
-        add(v_id, title, description, year, place); //影片的id, 標題, 描述, 紀錄的年份, 紀錄的地點
-    }
-	public static void add(String v_id, String title, String description, String year, String place){
+	public static void add(String videoId, String title, String description, String year, String place){
 		//做日期的轉換
         year = year + "/01/01"; 
         DateFormat df = new SimpleDateFormat("yyyy/mm/DD");
@@ -46,9 +30,9 @@ public class Musics extends Controller {
         String userAccount = session.get("account");
         User user = User.find("account", userAccount).first(); //存在音樂裡的user id
         String result = "save error";
-        if(Music.find("v_id", v_id).first()==null){
+        if(Music.find("videoId", videoId).first()==null){
 //        	System.out.println("=>check before save : "+v_id+"&"+title+"&"+description+"&"+date+"&"+place+"&"+user.getIdAsStr()+"@@@");
-        	Music music = new Music(v_id, title, description, date, place, user.getIdAsStr()); //line49~52是使用@embedded的關鍵,沒元素資料庫就沒有embedded欄位
+        	Music music = new Music(videoId, title, description, date, place, user.getIdAsStr()); //line49~52是使用@embedded的關鍵,沒元素資料庫就沒有embedded欄位
         	music.save();
         	result = "ok"; 
         }else{

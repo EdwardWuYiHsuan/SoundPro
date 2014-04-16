@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-*     /                                        Application.index
+*     /                                        Account.showPage
 
 #create member info
 *     /signup                                  Account.signup
@@ -12,19 +12,19 @@
 *     /login                                   Account.login
 
 #login page
-*     /loginpage                               Account.loginpage
+*     /loginSuccessful                         Account.loginSuccessful
 
 #log out page
 *     /logout                                  Account.logout 
 
 #parSav page
-*     /parse                                   Musics.parse
+*     /MusicSave                               Musics.add
 
 #get all data from database
 *     /getlist                                 Musics.getlist
 
 #show friend be selected 
-*     /showTagFriends                          Tag.list
+*     /showTagFriends                          Tag.showPage
 
 #tag friend save in music field taggedFriends
 *     /tagFriend                               Tag.tagFriend
@@ -33,32 +33,10 @@
 *     /cancelTagFriend                         Tag.remove
 
 #i am try to add comment
-*     /commentPage                             Comments.commentPage
+*     /commentPage                             Comments.showPage
 
 #save comment data
-*     /commentSave                             Comments.commentSave
-
-#### localhost:9000/user/create ####
-*     /user                                    MyUser.user
-
-#user create
-*     /user/create                             MyUser.create
-
-#user update
-*     /user/update                             MyUser.update
-
-#post update form data to update
-*     /user/upForm                             MyUser.upForm
-  
-#user delete
-*     /user/delete                             MyUser.delete
- 
-#user list
-*     /user/list                               MyUser.list  
-
-#get user data list
-*     /user/getList                            MyUser.getList   
-###################################                  
+*     /commentSave                             Comments.add                
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
