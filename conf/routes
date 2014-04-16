@@ -18,7 +18,7 @@
 *     /logout                                  Account.logout 
 
 #parSav page
-*     /parseJsonSav                            Musics.parse
+*     /parse                                   Musics.parse
 
 #get all data from database
 *     /getlist                                 Musics.getlist

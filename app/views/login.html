@@ -151,7 +151,7 @@
             alert("please check all the input button have word or must be log in!!");
             return;
         }
-        $.post( "parseJsonSav", { json:searchVideoResult, Num:searchVideoNum, year:year,  place:where} , saveResponseFn );
+        $.post( "parse", { json:searchVideoResult, Num:searchVideoNum, year:year,  place:where} , saveResponseFn );
     }
     function saveResponseFn(data){
         if(data=="ok"){
