@@ -6,37 +6,37 @@
 *     /                                        Application.index
 
 #create member info
-*     /signup                                  Application.signup
+*     /signup                                  Account.signup
 
 #login page
-*     /login                                   Application.login
+*     /login                                   Account.login
 
 #login page
-*     /loginpage                               Application.loginpage
+*     /loginpage                               Account.loginpage
 
 #log out page
-*     /logout                                  Application.logout 
+*     /logout                                  Account.logout 
 
 #parSav page
-*     /parseJsonSav                            Application.parseJsonSav
+*     /parseJsonSav                            Musics.add
 
 #get all data from database
-*     /getlist                                 Application.getlist
+*     /getlist                                 Musics.getlist
 
 #show friend be selected 
-*     /showTagFriends                          Application.showTagFriends
+*     /showTagFriends                          Tag.list
 
 #tag friend save in music field taggedFriends
-*     /tagFriend                               Application.tagFriend
+*     /tagFriend                               Tag.tagFriend
 
 #cancel tag friend
-*     /cancelTagFriend                         Application.cancelTagFriend
+*     /cancelTagFriend                         Tag.remove
 
 #i am try to add comment
-*     /commentPage                             Application.commentPage
+*     /commentPage                             Comments.commentPage
 
 #save comment data
-*     /commentSave                             Application.commentSave
+*     /commentSave                             Comments.commentSave
 
 #### localhost:9000/user/create ####
 *     /user                                    MyUser.user

@@ -8,13 +8,13 @@ import play.mvc.Controller;
 public class MyUser extends Controller {
 	
 	public static void user(){
-		renderTemplate("user.html");
+		renderTemplate("userTask/user.html");
 	}
 	
 	public static void create(String name, String age, String mail, String account, String password){
 //		System.out.println(name + "/" + age + "/" + mail + "/" + account + "/" + password);
 		if( name==null || age==null || mail==null || account==null || password==null ){ //javascript傳過來的值就是沒寫也不會是null
-			renderTemplate("create.html");
+			renderTemplate("userTask/create.html");
 			return;
 		}
 		new User(name, Integer.parseInt(age), mail, account, password).save(); //NumberFormatException
@@ -33,11 +33,11 @@ public class MyUser extends Controller {
 	public static void update(String id){
 		if(id==null){
 			List<User> userList = User.findAll();
-			renderTemplate("update.html", userList);
+			renderTemplate("userTask/update.html", userList);
 			return;
 		}
 		User user = User.findById(id);
-		renderTemplate("upForm.html", user);
+		renderTemplate("userTask/upForm.html", user);
 	}
 	public static void upForm(String id, String name, String age, String mail, String account, String password){
 //		System.out.println(id + "/" + name + "/" + age + "/" + mail + "/" + account + "/" + password);
@@ -53,7 +53,7 @@ public class MyUser extends Controller {
 	public static void delete(String id){
 		if(id==null){
 			List<User> userList = User.findAll();
-			renderTemplate("delete.html", userList);
+			renderTemplate("userTask/delete.html", userList);
 			return;
 		}
 		String result = "error";
@@ -64,7 +64,7 @@ public class MyUser extends Controller {
 		renderText(result);
 	}
 	public static void list(){
-		renderTemplate("list.html");
+		renderTemplate("userTask/list.html");
 	}
 	public static void getList(){
 		List<User> list = User.findAll();

@@ -1,0 +1,10 @@
+﻿Do you want to tag those friends : <select onchange='selectFriendChange(event)'>
+<option value='null'>please select..</option>
+#{list items:userList, as:'element'}
+    <option value='${element.id}'>${element.name}</option>
+#{/list}
+</select><br><br>already tag the friend(s) :<span style='color:#FF0000'> ${res[1]}</sapn> 
+#{list items:musicTagFriField, as:'e'}
+    <a style='cursor:pointer' onclick='cancelTagFn(event)' title='${e.id}'>${e.name}</a>
+#{/list}
+<p hidden="hidden">${res[0]}</p>
