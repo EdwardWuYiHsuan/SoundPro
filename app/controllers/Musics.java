@@ -17,7 +17,7 @@ import play.mvc.Controller;
 
 public class Musics extends Controller {
 	
-	public static void add(String json, int num, String year, String place, String act){
+	public static void parse(String json, int num, String year, String place){
     	// obect.items[0].snippet.title
     	JsonElement jelement = new JsonParser().parse(json);
         JsonObject  jobject = jelement.getAsJsonObject();        //找到最上層的object
@@ -31,27 +31,31 @@ public class Musics extends Controller {
     	JsonObject snippet = jobject.getAsJsonObject("snippet");
         String title = snippet.get("title").toString();
         String description = snippet.get("description").toString();
-        //做日期的轉換
+        add(v_id, title, description, year, place); //影片的id, 標題, 描述, 紀錄的年份, 紀錄的地點
+    }
+	public static void add(String v_id, String title, String description, String year, String place){
+		//做日期的轉換
         year = year + "/01/01"; 
         DateFormat df = new SimpleDateFormat("yyyy/mm/DD");
-        Date d = new Date();
+        Date date = new Date();
         try{
-        	d = df.parse(year);
+        	date = df.parse(year);
         }catch(Exception e){
         	System.out.println("exception message :" + e.getMessage());
         }
-        User user = User.find("account", act).first(); //存在音樂裡的user id
-//        System.out.println("=>check before save : "+v_id+"&"+title+"&"+description+"&"+d+"&"+place+"&"+user.getIdAsStr()+"@@@");
+        String userAccount = session.get("account");
+        User user = User.find("account", userAccount).first(); //存在音樂裡的user id
         String result = "save error";
         if(Music.find("v_id", v_id).first()==null){
-        	Music music = new Music(v_id, title, description, d, place, user.getIdAsStr()); //line49~52是使用@embedded的關鍵,沒元素資料庫就沒有embedded欄位
+//        	System.out.println("=>check before save : "+v_id+"&"+title+"&"+description+"&"+date+"&"+place+"&"+user.getIdAsStr()+"@@@");
+        	Music music = new Music(v_id, title, description, date, place, user.getIdAsStr()); //line49~52是使用@embedded的關鍵,沒元素資料庫就沒有embedded欄位
         	music.save();
         	result = "ok"; 
         }else{
         	result = "already have the same video!!";
         }
         renderText(result);
-    }
+	}
 	public static void getlist(String userAccount, int strNum, int endNum){
 //    	System.out.println("userAccount: " + userAccount + "/strNum:"+ strNum + "/endNum:" + endNum); 
     	User user = User.find("account", userAccount).first();
