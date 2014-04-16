@@ -56,8 +56,9 @@ public class Musics extends Controller {
         }
         renderText(result);
 	}
-	public static void getlist(String userAccount, int strNum, int endNum){
-//    	System.out.println("userAccount: " + userAccount + "/strNum:"+ strNum + "/endNum:" + endNum); 
+	public static void getlist(int strNum, int endNum){
+//    	System.out.println("strNum:"+ strNum + "/endNum:" + endNum); 
+		String userAccount = session.get("account");
     	User user = User.find("account", userAccount).first();
     	String userId = user.getIdAsStr();
     	MorphiaQuery q = Music.q();

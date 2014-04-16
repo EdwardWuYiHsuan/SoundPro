@@ -82,8 +82,7 @@
     var currentVideoAmount=0, getVideoNum=3, isRemoveli=true;
     $(document).ready(function(){
         userLoginAccount = $("#wrapper input[name|='userLoginAccount']").val();  //先將隱藏在input的登入著帳號存起來, 顯示影片用
-        $.post( "getlist", {userAccount:userLoginAccount, 
-        	                strNum:currentVideoAmount, 
+        $.post( "getlist", {strNum:currentVideoAmount, 
         	                endNum:(currentVideoAmount+getVideoNum)}, getlistResponseFn ); //畫面載入影片顯示
         $(".inputgroup ul").hide();
         $(".inputgroup input[title|='year']").bind("focus", focusFn);
@@ -102,8 +101,7 @@
         	//console.log($(window).scrollTop())
         	if($(window).scrollTop()==$(document).height()-$(window).height()){  console.log("down");
         	   isRemoveli = false;
-        	   $.post( "getlist", {userAccount:userLoginAccount, 
-        		                   strNum:currentVideoAmount, 
+        	   $.post( "getlist", {strNum:currentVideoAmount, 
         		                   endNum:(currentVideoAmount+getVideoNum-1)}, getlistResponseFn ); //畫面載入影片顯示
         	}
         })
@@ -159,8 +157,7 @@
         if(data=="ok"){
         	currentVideoAmount=0;
         	isRemoveli = true;
-        	$.post( "getlist", {userAccount:userLoginAccount, 
-        		                strNum:currentVideoAmount, 
+        	$.post( "getlist", {strNum:currentVideoAmount, 
         		                endNum:(currentVideoAmount+getVideoNum)}, getlistResponseFn ); //畫面載入影片顯示
         }else{
             alert(data);
@@ -222,13 +219,12 @@
       });
     
       request.execute(function(response) {
-	      //console.log(response);                            //測試String
+	      //console.log(response);                                //測試String
 	      var result = response.result;
 	      if (result) {
-	         searchVideoResult = JSON.stringify(result);          //得到json的純文字格式
-	         //console.log(searchVideoResult);                            //測試String
-	         //$("#info").html(searchVideoResult);                         //測試
-	         displayJsonInList( JSON.parse(searchVideoResult) )             
+	         searchVideoResult = JSON.stringify(result);          //得到json的純文字格式(json檔案)
+	         //console.log(searchVideoResult);                    //測試String
+	         displayJsonInList( JSON.parse(searchVideoResult) )   //javascript分析json檔案       
 	      }else {
 	      	 alert("Error, try again later");
 	      }
@@ -319,6 +315,5 @@
     </div>
     <div id="comment"></div>
 </div>
-<div id='info'></div>
 <div id='tagFriWindow'></div>
 <div id='commentWindow'></div>
