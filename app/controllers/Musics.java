@@ -17,7 +17,7 @@ import play.mvc.Controller;
 
 public class Musics extends Controller {
 	
-	public static void add(String videoId, String title, String description, String year, String place){
+	public static void add(String videoId, String title, String description, String year, String place) {
 		//做日期的轉換
         year = year + "/01/01"; 
         DateFormat df = new SimpleDateFormat("yyyy/mm/DD");
@@ -40,7 +40,8 @@ public class Musics extends Controller {
         }
         renderText(result);
 	}
-	public static void getlist(int strNum, int endNum){
+	
+	public static void getlist(int strNum, int endNum) {
 //    	System.out.println("strNum:"+ strNum + "/endNum:" + endNum); 
 		String userAccount = session.get("account");
     	User user = User.find("account", userAccount).first();

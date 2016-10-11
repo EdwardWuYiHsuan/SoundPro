@@ -1,0 +1,8 @@
+### Eclipse Creation ###
+.classpath
+.project
+.settings/
+eclipse/
+
+### Folder ###
+tmp/

@@ -9,7 +9,7 @@ import play.mvc.Controller;
 
 public class Tag extends Controller {
 
-	public static void showPage(String videoId){  //做tag的顯示
+	public static void showPage(String videoId) {  //做tag的顯示
     	List<User> userList = User.findAll();
     	Music music = Music.find("videoId", videoId).first();
     	List<User> musicTagFriField = music.taggedFriends; //現在可以存null了不會有Exception(本來就可以存的, 所以移到外面用)
@@ -26,7 +26,8 @@ public class Tag extends Controller {
     	}
     	renderTemplate("fragments/tags.html", userList, res, musicTagFriField); //taginFriend
     }
-    public static void tagFriend(String videoId, String nameId){ //做tag的儲存
+	
+    public static void tagFriend(String videoId, String nameId) { //做tag的儲存
     	Music music = Music.find("videoId", videoId).first();
     	User user = User.findById(nameId); //要存入在taggedFriends集合裡的是一個User物件, 而傳過來的是user id, 建立物件存入
     	boolean b = false;
@@ -40,7 +41,8 @@ public class Tag extends Controller {
     	music.save();
     	renderJSON(b);
     }
-    public static void remove(String videoId, String tagFriId){
+    
+    public static void remove(String videoId, String tagFriId) {
     	Music music = Music.find("videoId", videoId).first();
     	boolean b = false;
     	b = music.taggedFriends.remove(User.findById(tagFriId));

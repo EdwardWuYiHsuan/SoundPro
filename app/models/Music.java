@@ -18,6 +18,7 @@ import com.google.code.morphia.utils.IndexDirection;
 @Entity
 //@Indexes({@Index("-year")})
 public class Music extends Model {
+	
 	@Id
 	public String videoId;
 	public String title;
@@ -33,7 +34,7 @@ public class Music extends Model {
 	@Embedded
 	public List<Comment> comments;
 	
-	public Music(String videoId, String title, String description, Date year, String place, String userId){
+	public Music(String videoId, String title, String description, Date year, String place, String userId) {
 		this.videoId = videoId;
 		this.title = title;
 		this.description = description;
@@ -42,41 +43,53 @@ public class Music extends Model {
 		this.userId = userId;
 		this.taggedFriends = new ArrayList<User>();
 		this.comments = new ArrayList<Comment>();
-	} 
-	public void setv_id(String videoId){
+	}
+	
+	public void setv_id(String videoId) {
 		this.videoId = videoId;
 	}
-	public String getv_id(){
+	
+	public String getv_id() {
 		return videoId;
 	}
-	public void setTitle(String title){
+	
+	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getTitle(){
+	
+	public String getTitle() {
 		return title;
 	}
-	public void setDes(String description){
+	
+	public void setDes(String description) {
 		this.description = description;
 	}
-	public String getDes(){
+	
+	public String getDes() {
 		return description;
 	}
-	public void setYear(Date year){
+	
+	public void setYear(Date year) {
 		this.year = year;
 	}
-	public Date getYear(){
+	
+	public Date getYear() {
 		return year;
 	}
-	public void setPlace(String place){
+	
+	public void setPlace(String place) {
 		this.place = place;
 	}
-	public String getPlace(){
+	
+	public String getPlace() {
 		return place;
 	}
-	public void setUserId(String id){
+	
+	public void setUserId(String id) {
 		this.userId = id;
 	}
-	public String getUserId(){
+	
+	public String getUserId() {
 		return userId;
 	}
 	

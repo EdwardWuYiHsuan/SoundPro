@@ -7,8 +7,9 @@ public class Account extends Controller {
 	
 	public static void showPage() {
         renderTemplate("login.html");
-    }	
-	public static void signup(String name, String age, String mail, String account, String password){
+    }
+	
+	public static void signup(String name, String age, String mail, String account, String password) {
 //    	System.out.println("name : " + name + "/age : " + age + "/mail : " + mail + "/account : " + account + "/password : " + password);
     	if(name==null||age==null||account==null||password==null){
     		render("signup.html");  //這邊可以連結到loginpage
@@ -26,7 +27,8 @@ public class Account extends Controller {
     		
 		}
     }
-	public static void login(String account, String password){
+	
+	public static void login(String account, String password) {
 //    	System.out.println("##account : " + account + "/password : " + password);
     	if( account!=null && password!=null ){
     		User user = User.find("account", account).first(); //連帳號都輸入錯誤, 就會沒找到user就會null
@@ -44,7 +46,8 @@ public class Account extends Controller {
     		showPage();
     	}
     }
-    public static void loginSuccessful(){
+	
+    public static void loginSuccessful() {
     	String userSession = session.get("account");
     	if(userSession!=null){
     		User user = User.find("account", userSession).first();
@@ -54,7 +57,8 @@ public class Account extends Controller {
     		showPage();
     	}
     }
-    public static void logout(){
+    
+    public static void logout() {
     	session.remove("account");
 //    	System.out.println("##logout remove session : " + session.get("account"));
     	showPage();
